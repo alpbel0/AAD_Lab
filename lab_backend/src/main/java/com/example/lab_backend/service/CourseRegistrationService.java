@@ -4,6 +4,8 @@ import com.example.lab_backend.model.Course;
 import com.example.lab_backend.model.CourseRegistration;
 import com.example.lab_backend.model.Student;
 import com.example.lab_backend.repository.CourseRegistrationRepository;
+import com.example.lab_backend.repository.CourseRepository;
+import com.example.lab_backend.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,17 @@ import java.util.Optional;
 public class CourseRegistrationService {
 
     private final CourseRegistrationRepository courseRegistrationRepository;
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseRegistrationService(CourseRegistrationRepository courseRegistrationRepository) {
+    public CourseRegistrationService(
+            CourseRegistrationRepository courseRegistrationRepository,
+            StudentRepository studentRepository,
+            CourseRepository courseRepository) {
         this.courseRegistrationRepository = courseRegistrationRepository;
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
     }
 
     public List<CourseRegistration> getAllRegistrations() {
@@ -70,5 +79,29 @@ public class CourseRegistrationService {
 
     public void deleteRegistration(Long id) {
         courseRegistrationRepository.deleteById(id);
+    }
+
+    // Test amaçlı onay bekleyen kayıt oluşturma metodu
+    public boolean createTestPendingRegistration(Long studentId, Long adviserId, Long courseId) {
+        try {
+            Optional<Student> studentOptional = studentRepository.findById(studentId);
+            Optional<Course> courseOptional = courseRepository.findById(courseId);
+            
+            if (studentOptional.isPresent() && courseOptional.isPresent()) {
+                Student student = studentOptional.get();
+                Course course = courseOptional.get();
+                
+                CourseRegistration registration = new CourseRegistration();
+                registration.setStudent(student);
+                registration.setCourse(course);
+                registration.setRegistrationDate(new Date());
+                registration.setStatus("PENDING");
+                courseRegistrationRepository.save(registration);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 } 

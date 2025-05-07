@@ -108,4 +108,16 @@ public class CourseRegistrationController {
         registrationService.deleteRegistration(id);
         return ResponseEntity.noContent().build();
     }
+    
+    // Test amaçlı onay bekleyen kayıt oluşturma
+    @PostMapping("/create-test-pending")
+    public ResponseEntity<String> createTestPendingRegistrations(
+            @RequestParam Long studentId,
+            @RequestParam Long adviserId,
+            @RequestParam Long courseId) {
+        
+        return registrationService.createTestPendingRegistration(studentId, adviserId, courseId)
+                ? ResponseEntity.ok("Test kayıtları oluşturuldu")
+                : ResponseEntity.badRequest().body("Kayıt oluşturulamadı, parametreleri kontrol edin");
+    }
 } 
