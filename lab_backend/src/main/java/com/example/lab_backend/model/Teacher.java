@@ -19,6 +19,10 @@ public class Teacher {
     @JsonIgnore
     private List<Course> courses;
 
+    @OneToMany(mappedBy = "adviser")
+    @JsonIgnore
+    private List<Student> advisingStudents;
+
     // Constructors
     public Teacher() {
     }
@@ -68,5 +72,13 @@ public class Teacher {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public List<Student> getAdvisingStudents() {
+        return advisingStudents;
+    }
+
+    public void setAdvisingStudents(List<Student> advisingStudents) {
+        this.advisingStudents = advisingStudents;
     }
 }

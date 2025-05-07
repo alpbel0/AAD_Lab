@@ -1,6 +1,9 @@
 package com.example.lab_backend.model;
 
 import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "course")
@@ -18,6 +21,10 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<CourseRegistration> registrations;
 
     // Constructors
     public Course() {
@@ -60,5 +67,13 @@ public class Course {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    public List<CourseRegistration> getRegistrations() {
+        return registrations;
+    }
+
+    public void setRegistrations(List<CourseRegistration> registrations) {
+        this.registrations = registrations;
     }
 }

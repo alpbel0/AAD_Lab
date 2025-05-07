@@ -2,6 +2,9 @@ package com.example.lab_backend.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "student")
@@ -17,6 +20,14 @@ public class Student {
     
     @Temporal(TemporalType.DATE)
     private Date enrollment;
+
+    @ManyToOne
+    @JoinColumn(name = "adviser_id")
+    private Teacher adviser;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<CourseRegistration> courseRegistrations;
 
     // Constructors
     public Student() {
@@ -77,5 +88,21 @@ public class Student {
 
     public void setEnrollment(Date enrollment) {
         this.enrollment = enrollment;
+    }
+
+    public Teacher getAdviser() {
+        return adviser;
+    }
+
+    public void setAdviser(Teacher adviser) {
+        this.adviser = adviser;
+    }
+
+    public List<CourseRegistration> getCourseRegistrations() {
+        return courseRegistrations;
+    }
+
+    public void setCourseRegistrations(List<CourseRegistration> courseRegistrations) {
+        this.courseRegistrations = courseRegistrations;
     }
 }
